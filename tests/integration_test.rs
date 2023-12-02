@@ -1,6 +1,6 @@
 use advent_of_code_2023::days::{
     day_1::*,
-    day_2::{is_game_possible, read_games_from_file, CubeCounts},
+    day_2::{calculate_power_max_set, is_game_possible, read_games_from_file, CubeCounts},
 };
 
 #[ignore]
@@ -27,7 +27,10 @@ fn test_day_1() {
 #[test]
 fn test_day_2() {
     // Define a map of file paths and their expected sums
-    let test_cases = [("input/day_2_1.txt", 8), ("input/day_2_2.txt", 2679)];
+    let test_cases = [
+        ("input/day_2_1.txt", 8, 2286),
+        ("input/day_2_2.txt", 2679, 77607),
+    ];
     let cube_counts: CubeCounts = [
         ("red".to_string(), 12),
         ("green".to_string(), 13),
@@ -38,7 +41,7 @@ fn test_day_2() {
     .collect();
 
     // Iterate through the test cases
-    for (file_path, expected_sum) in test_cases.iter() {
+    for (file_path, expected_sum, expected_power_max) in test_cases.iter() {
         match read_games_from_file(file_path) {
             Ok(games) => {
                 // for (i, game) in games.iter().enumerate() {
@@ -55,6 +58,10 @@ fn test_day_2() {
                 println!("Possible games: {:?}", possible_games);
                 println!("Sum of IDs: {}", sum);
                 assert_eq!(sum, *expected_sum);
+
+                let power_max = calculate_power_max_set(&games);
+                println!("Power max cubes: {}", power_max);
+                assert_eq!(power_max, *expected_power_max);
             }
             Err(err) => eprintln!("Error reading file: {}", err),
         }

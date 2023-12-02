@@ -84,8 +84,44 @@ impl Game {
         }
         true
     }
+
+    pub fn calculate_max_set(&self) -> Option<Subset> {
+        let mut counts = HashMap::new();
+
+        for subset in &self.subsets {
+            for (color, count) in &subset.counts {
+                match counts.get(color.as_str()) {
+                    Some(&prev) => {
+                        if prev < *count {
+                            counts.insert(color.clone(), *count);
+                        }
+                    }
+                    None => {
+                        counts.insert(color.clone(), *count);
+                    }
+                }
+            }
+        }
+
+        Some(Subset { counts })
+    }
 }
 
 pub fn is_game_possible(game: &Game, counts: &HashMap<String, usize>) -> bool {
     game.is_possible(counts)
+}
+
+pub fn calculate_power_max_set(games: &[Game]) -> usize {
+    let mut total_max_set = 0;
+
+    for game in games {
+        let mut product = 1;
+        let max_set = game.calculate_max_set().unwrap();
+        for (_key, value) in max_set.counts.iter() {
+            product *= value;
+        }
+        total_max_set += product;
+    }
+
+    total_max_set
 }
