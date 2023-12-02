@@ -13,7 +13,15 @@ fn test_day_1() {
     let file_path_2 = "input/day_1_2.txt";
     match process_file(file_path_2) {
         Ok(total) => {
-            assert_eq!(total, 54708);
+            assert_eq!(total, 54087);
+        }
+        Err(err) => eprintln!("Error reading file: {}", err),
+    }
+
+    let file_path_3 = "input/day_1_3.txt";
+    match process_file(file_path_3) {
+        Ok(total) => {
+            assert_eq!(total, 281);
         }
         Err(err) => eprintln!("Error reading file: {}", err),
     }
