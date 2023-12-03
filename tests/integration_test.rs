@@ -1,7 +1,10 @@
 use advent_of_code_2023::days::{
     day_1::*,
     day_2::{calculate_power_max_set, is_game_possible, read_games_from_file, CubeCounts},
-    day_3::{calculate_sum, check_surroundings, process_file as process_file_3},
+    day_3::{
+        calculate_sum, calculate_sum_of_gear_ratios, check_surroundings,
+        process_file as process_file_3,
+    },
 };
 
 #[ignore]
@@ -73,17 +76,25 @@ fn test_day_2() {
 #[test]
 fn test_day_3() {
     // Define a map of file paths and their expected sums
-    let test_cases = [("input/day_3_1.txt", 4361), ("input/day_3_2.txt", 527446)];
+    let test_cases = [
+        ("input/day_3_1.txt", 4361, 467835),
+        ("input/day_3_2.txt", 527446, 73201705),
+    ];
 
     // Iterate through the test cases
-    for (file_path, expected_sum) in test_cases.iter() {
+    for (file_path, expected_sum, expected_sum_gear_ratios) in test_cases.iter() {
         match process_file_3(file_path) {
             Ok((part_numbers, lines)) => {
                 // for (i, part_number) in part_numbers.iter().enumerate() {
                 //     println!("Row {}: {:?}", i + 1, part_number);
                 // }
-                let sum = calculate_sum(check_surroundings(&part_numbers, &lines));
+                let (result_parts, gears) = check_surroundings(&part_numbers, &lines);
+
+                let sum = calculate_sum(&result_parts);
+                let sum_gear_ratios = calculate_sum_of_gear_ratios(&gears);
+
                 assert_eq!(sum, *expected_sum);
+                assert_eq!(sum_gear_ratios, *expected_sum_gear_ratios);
             }
             Err(err) => eprintln!("Error reading file: {}", err),
         }
