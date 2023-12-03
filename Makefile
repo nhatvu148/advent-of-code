@@ -6,3 +6,6 @@ run:
 
 build:
 	cargo build
+
+watch:
+	sudo sh watch.sh main
