@@ -8,4 +8,8 @@ build:
 	cargo build
 
 watch:
+ifdef OS
+	watch.cmd main
+else
 	sudo sh watch.sh main
+endif
