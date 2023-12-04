@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::{self, BufRead};
 
@@ -35,23 +36,51 @@ pub fn process_file(path: &str) -> Result<(Vec<Vec<u32>>, Vec<Vec<u32>>), io::Er
     Ok((winning_numbers, having_numbers))
 }
 
-pub fn find_matching_card(winning_numbers: &Vec<Vec<u32>>, having_numbers: &Vec<Vec<u32>>) -> i32 {
+pub fn find_matching_card(
+    winning_numbers: &Vec<Vec<u32>>,
+    having_numbers: &Vec<Vec<u32>>,
+) -> (i32, u32) {
     let mut points = 0;
+    let mut scratch_cards_map: BTreeMap<usize, u32> = winning_numbers
+        .iter()
+        .enumerate()
+        .map(|(id, _)| (id, 1))
+        .collect();
+
     for (row_id, having_number_row) in having_numbers.iter().enumerate() {
         let winning_number_row = &winning_numbers[row_id];
-        let mut count = 0;
+        let mut count: usize = 0;
         for hn in having_number_row.iter() {
             if winning_number_row.contains(&hn) {
-                println!("winning_number_row contains {}", hn);
                 count += 1;
             }
         }
         if count > 0 {
+            let from_index = row_id + 1;
+            let to_index = if row_id + count > having_numbers.len() - 1 {
+                having_numbers.len() - 1
+            } else {
+                row_id + count
+            };
+            for key in scratch_cards_map.clone().keys() {
+                if *key >= from_index && *key <= to_index {
+                    let copy_scratch_cards_map = scratch_cards_map.clone();
+                    let current_row_value = copy_scratch_cards_map.get(&row_id).unwrap();
+                    update_map(&mut scratch_cards_map, *key, current_row_value * 1);
+                }
+            }
+
             let base: i32 = 2;
-            let exponent: u32 = count - 1;
-            points += base.pow(exponent);
+            let exponent = count - 1;
+            points += base.pow(exponent as u32);
         }
     }
-    
-    points
+
+    let total_scratch_cards: u32 = scratch_cards_map.values().sum();
+
+    (points, total_scratch_cards)
+}
+
+fn update_map(map: &mut BTreeMap<usize, u32>, key: usize, value: u32) {
+    map.entry(key).and_modify(|v| *v += value);
 }

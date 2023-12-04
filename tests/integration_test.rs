@@ -107,16 +107,18 @@ fn test_day_3() {
 fn test_day_4() {
     // Define a map of file paths and their expected sums
     let test_cases = [
-        ("input/day_4_1.txt", 13),
-        ("input/day_4_2.txt", 27454),
+        ("input/day_4_1.txt", 13, 30),
+        ("input/day_4_2.txt", 27454, 6857330),
     ];
 
     // Iterate through the test cases
-    for (file_path, expected_sum) in test_cases.iter() {
+    for (file_path, expected_sum, expected_total_scratch_cards) in test_cases.iter() {
         match process_file_4(file_path) {
             Ok((winning_numbers, having_numbers)) => {
-                let sum = find_matching_card(&winning_numbers, &having_numbers);
+                let (sum, total_scratch_cards) = find_matching_card(&winning_numbers, &having_numbers);
+                
                 assert_eq!(sum, *expected_sum);
+                assert_eq!(total_scratch_cards, *expected_total_scratch_cards);
             }
             Err(err) => eprintln!("Error reading file: {}", err),
         }
