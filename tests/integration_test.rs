@@ -5,6 +5,7 @@ use advent_of_code_2023::days::{
         calculate_sum, calculate_sum_of_gear_ratios, check_surroundings,
         process_file as process_file_3,
     },
+    day_4::{find_matching_card, process_file as process_file_4},
 };
 
 #[ignore]
@@ -73,6 +74,7 @@ fn test_day_2() {
     }
 }
 
+#[ignore]
 #[test]
 fn test_day_3() {
     // Define a map of file paths and their expected sums
@@ -95,6 +97,26 @@ fn test_day_3() {
 
                 assert_eq!(sum, *expected_sum);
                 assert_eq!(sum_gear_ratios, *expected_sum_gear_ratios);
+            }
+            Err(err) => eprintln!("Error reading file: {}", err),
+        }
+    }
+}
+
+#[test]
+fn test_day_4() {
+    // Define a map of file paths and their expected sums
+    let test_cases = [
+        ("input/day_4_1.txt", 13),
+        ("input/day_4_2.txt", 27454),
+    ];
+
+    // Iterate through the test cases
+    for (file_path, expected_sum) in test_cases.iter() {
+        match process_file_4(file_path) {
+            Ok((winning_numbers, having_numbers)) => {
+                let sum = find_matching_card(&winning_numbers, &having_numbers);
+                assert_eq!(sum, *expected_sum);
             }
             Err(err) => eprintln!("Error reading file: {}", err),
         }
