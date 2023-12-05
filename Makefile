@@ -7,6 +7,9 @@ run:
 build:
 	cargo build
 
+fmt:
+	cargo fmt
+
 watch:
 ifdef OS
 	watch.cmd main
