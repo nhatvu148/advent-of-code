@@ -6,6 +6,7 @@ use advent_of_code_2023::days::{
         process_file as process_file_3,
     },
     day_4::{find_matching_card, process_file as process_file_4},
+    day_5::{find_lowest_location, process_file as process_file_5},
 };
 
 #[ignore]
@@ -103,6 +104,7 @@ fn test_day_3() {
     }
 }
 
+#[ignore]
 #[test]
 fn test_day_4() {
     // Define a map of file paths and their expected sums
@@ -115,10 +117,30 @@ fn test_day_4() {
     for (file_path, expected_sum, expected_total_scratch_cards) in test_cases.iter() {
         match process_file_4(file_path) {
             Ok((winning_numbers, having_numbers)) => {
-                let (sum, total_scratch_cards) = find_matching_card(&winning_numbers, &having_numbers);
-                
+                let (sum, total_scratch_cards) =
+                    find_matching_card(&winning_numbers, &having_numbers);
+
                 assert_eq!(sum, *expected_sum);
                 assert_eq!(total_scratch_cards, *expected_total_scratch_cards);
+            }
+            Err(err) => eprintln!("Error reading file: {}", err),
+        }
+    }
+}
+
+#[test]
+fn test_day_5() {
+    // Define a map of file paths and their expected sums
+    let test_cases: [(&str, u128); 2] =
+        [("input/day_5_1.txt", 35), ("input/day_5_2.txt", 484023871)];
+
+    // Iterate through the test cases
+    for (file_path, expected_lowest) in test_cases.iter() {
+        match process_file_5(file_path) {
+            Ok(map_data) => {
+                let lowest = find_lowest_location(&map_data);
+
+                assert_eq!(lowest, *expected_lowest);
             }
             Err(err) => eprintln!("Error reading file: {}", err),
         }
