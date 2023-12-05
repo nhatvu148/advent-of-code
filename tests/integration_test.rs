@@ -131,16 +131,17 @@ fn test_day_4() {
 #[test]
 fn test_day_5() {
     // Define a map of file paths and their expected sums
-    let test_cases: [(&str, u128); 2] =
-        [("input/day_5_1.txt", 35), ("input/day_5_2.txt", 484023871)];
+    let test_cases: [(&str, u128, u128); 2] =
+        [("input/day_5_1.txt", 35, 46), ("input/day_5_2.txt", 484023871, 46294175)];
 
     // Iterate through the test cases
-    for (file_path, expected_lowest) in test_cases.iter() {
+    for (file_path, expected_lowest, expected_lowest_for_seed_pairs) in test_cases.iter() {
         match process_file_5(file_path) {
             Ok(map_data) => {
-                let lowest = find_lowest_location(&map_data);
+                let (min_location, min_location_for_seed_pairs) = find_lowest_location(&map_data);
 
-                assert_eq!(lowest, *expected_lowest);
+                assert_eq!(min_location, *expected_lowest);
+                assert_eq!(min_location_for_seed_pairs, *expected_lowest_for_seed_pairs);
             }
             Err(err) => eprintln!("Error reading file: {}", err),
         }

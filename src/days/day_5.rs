@@ -1,3 +1,4 @@
+use rayon::prelude::*;
 use std::fs::File;
 use std::io::{self, BufRead};
 
@@ -90,7 +91,7 @@ pub fn process_file(file_path: &str) -> io::Result<MapData> {
     })
 }
 
-pub fn find_lowest_location(map_data: &MapData) -> u128 {
+pub fn find_lowest_location(map_data: &MapData) -> (u128, u128) {
     let MapData {
         seeds,
         seed_to_soil,
@@ -125,7 +126,7 @@ pub fn find_lowest_location(map_data: &MapData) -> u128 {
                 if src_start <= current_location && current_location < src_start + range_len {
                     is_within_range = true;
                     temp = current_location - src_start + dest_start;
-                } else {
+                    break;
                 }
             }
             if is_within_range {
@@ -138,7 +139,47 @@ pub fn find_lowest_location(map_data: &MapData) -> u128 {
         }
     }
 
-    min_location
+    let min_locations: Vec<u128> = seeds
+        .par_chunks(2)
+        .map(|chunk| {
+            if let [seed_start, seed_range] = chunk {
+                let seed_start = *seed_start;
+                let seed_range = *seed_range;
+
+                (0..seed_range)
+                    .map(|i| {
+                        let mut current_location = seed_start + i;
+
+                        for transform_rule in transform_chain.iter() {
+                            let mut temp = 0;
+                            let mut is_within_range = false;
+                            for &(dest_start, src_start, range_len) in transform_rule.iter() {
+                                if src_start <= current_location
+                                    && current_location < src_start + range_len
+                                {
+                                    is_within_range = true;
+                                    temp = current_location - src_start + dest_start;
+                                    break;
+                                }
+                            }
+                            if is_within_range {
+                                current_location = temp;
+                            }
+                        }
+
+                        current_location
+                    })
+                    .min()
+                    .unwrap_or(u128::MAX)
+            } else {
+                u128::MAX
+            }
+        })
+        .collect();
+
+    let min_location_for_seed_pairs = min_locations.into_par_iter().min().unwrap_or(u128::MAX);
+
+    (min_location, min_location_for_seed_pairs)
 }
 
 fn parse_tuple_lines<I, S>(lines: I) -> Vec<(u128, u128, u128)>
