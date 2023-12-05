@@ -31,7 +31,9 @@ fn split_string_to_numbers(input: &str) -> Vec<(usize, usize, i32)> {
                     ));
                 }
                 None
-            } else if let (Some(start), Some(end)) = (start_idx.take(), end_idx.take()) {
+            } else if let (Some(start), Some(end)) =
+                (start_idx.take(), end_idx.take())
+            {
                 Some((start, end, input[start..=end].parse::<i32>().unwrap()))
             } else {
                 None
@@ -76,7 +78,9 @@ pub fn check_surroundings(
             }
 
             // check right
-            if *end < line.len() - 1 && is_next_to_symbol(&current_line[*end + 1]) {
+            if *end < line.len() - 1
+                && is_next_to_symbol(&current_line[*end + 1])
+            {
                 update_map(&mut gears, id, *end + 1, *value);
                 result_parts.push(*value);
                 continue 'this_loop;
@@ -110,7 +114,7 @@ pub fn check_surroundings(
             }
         }
     }
-    
+
     (result_parts, gears)
 }
 
@@ -129,11 +133,16 @@ pub fn calculate_sum_of_gear_ratios(gears: &HashMap<u64, Vec<i32>>) -> i32 {
             sum += calculate_product(gear);
         }
     }
-    
+
     sum
 }
 
-fn update_map(map: &mut HashMap<u64, Vec<i32>>, row: usize, col: usize, value: i32) {
+fn update_map(
+    map: &mut HashMap<u64, Vec<i32>>,
+    row: usize,
+    col: usize,
+    value: i32,
+) {
     let hash_value = hash_matrix_index(row, col);
 
     map.entry(hash_value)
@@ -148,7 +157,9 @@ pub fn hash_matrix_index(row: usize, col: usize) -> u64 {
     hasher.finish()
 }
 
-pub fn process_file(file_path: &str) -> io::Result<(Vec<Vec<(usize, usize, i32)>>, Vec<String>)> {
+pub fn process_file(
+    file_path: &str,
+) -> io::Result<(Vec<Vec<(usize, usize, i32)>>, Vec<String>)> {
     let file = File::open(file_path)?;
     let reader = io::BufReader::new(file);
 

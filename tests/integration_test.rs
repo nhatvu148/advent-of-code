@@ -1,6 +1,9 @@
 use advent_of_code_2023::days::{
     day_1::*,
-    day_2::{calculate_power_max_set, is_game_possible, read_games_from_file, CubeCounts},
+    day_2::{
+        calculate_power_max_set, is_game_possible, read_games_from_file,
+        CubeCounts,
+    },
     day_3::{
         calculate_sum, calculate_sum_of_gear_ratios, check_surroundings,
         process_file as process_file_3,
@@ -85,13 +88,15 @@ fn test_day_3() {
     ];
 
     // Iterate through the test cases
-    for (file_path, expected_sum, expected_sum_gear_ratios) in test_cases.iter() {
+    for (file_path, expected_sum, expected_sum_gear_ratios) in test_cases.iter()
+    {
         match process_file_3(file_path) {
             Ok((part_numbers, lines)) => {
                 // for (i, part_number) in part_numbers.iter().enumerate() {
                 //     println!("Row {}: {:?}", i + 1, part_number);
                 // }
-                let (result_parts, gears) = check_surroundings(&part_numbers, &lines);
+                let (result_parts, gears) =
+                    check_surroundings(&part_numbers, &lines);
 
                 let sum = calculate_sum(&result_parts);
                 let sum_gear_ratios = calculate_sum_of_gear_ratios(&gears);
@@ -114,7 +119,9 @@ fn test_day_4() {
     ];
 
     // Iterate through the test cases
-    for (file_path, expected_sum, expected_total_scratch_cards) in test_cases.iter() {
+    for (file_path, expected_sum, expected_total_scratch_cards) in
+        test_cases.iter()
+    {
         match process_file_4(file_path) {
             Ok((winning_numbers, having_numbers)) => {
                 let (sum, total_scratch_cards) =
@@ -131,17 +138,25 @@ fn test_day_4() {
 #[test]
 fn test_day_5() {
     // Define a map of file paths and their expected sums
-    let test_cases: [(&str, u128, u128); 2] =
-        [("input/day_5_1.txt", 35, 46), ("input/day_5_2.txt", 484023871, 46294175)];
+    let test_cases: [(&str, u128, u128); 2] = [
+        ("input/day_5_1.txt", 35, 46),
+        ("input/day_5_2.txt", 484023871, 46294175),
+    ];
 
     // Iterate through the test cases
-    for (file_path, expected_lowest, expected_lowest_for_seed_pairs) in test_cases.iter() {
+    for (file_path, expected_lowest, expected_lowest_for_seed_pairs) in
+        test_cases.iter()
+    {
         match process_file_5(file_path) {
             Ok(map_data) => {
-                let (min_location, min_location_for_seed_pairs) = find_lowest_location(&map_data);
+                let (min_location, min_location_for_seed_pairs) =
+                    find_lowest_location(&map_data);
 
                 assert_eq!(min_location, *expected_lowest);
-                assert_eq!(min_location_for_seed_pairs, *expected_lowest_for_seed_pairs);
+                assert_eq!(
+                    min_location_for_seed_pairs,
+                    *expected_lowest_for_seed_pairs
+                );
             }
             Err(err) => eprintln!("Error reading file: {}", err),
         }

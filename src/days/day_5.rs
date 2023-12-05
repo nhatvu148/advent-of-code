@@ -57,20 +57,23 @@ pub fn process_file(file_path: &str) -> io::Result<MapData> {
                         .split_whitespace()
                         .filter_map(|s| s.parse::<u128>().ok()),
                 ),
-                Some("seed-to-soil map") => seed_to_soil.extend(parse_tuple_lines(&mut lines)),
+                Some("seed-to-soil map") => {
+                    seed_to_soil.extend(parse_tuple_lines(&mut lines))
+                }
                 Some("soil-to-fertilizer map") => {
                     soil_to_fertilizer.extend(parse_tuple_lines(&mut lines))
                 }
                 Some("fertilizer-to-water map") => {
                     fertilizer_to_water.extend(parse_tuple_lines(&mut lines))
                 }
-                Some("water-to-light map") => water_to_light.extend(parse_tuple_lines(&mut lines)),
+                Some("water-to-light map") => {
+                    water_to_light.extend(parse_tuple_lines(&mut lines))
+                }
                 Some("light-to-temperature map") => {
                     light_to_temperature.extend(parse_tuple_lines(&mut lines))
                 }
-                Some("temperature-to-humidity map") => {
-                    temperature_to_humidity.extend(parse_tuple_lines(&mut lines))
-                }
+                Some("temperature-to-humidity map") => temperature_to_humidity
+                    .extend(parse_tuple_lines(&mut lines)),
                 Some("humidity-to-location map") => {
                     humidity_to_location.extend(parse_tuple_lines(&mut lines))
                 }
@@ -123,7 +126,9 @@ pub fn find_lowest_location(map_data: &MapData) -> (u128, u128) {
             let mut temp = 0;
             let mut is_within_range = false;
             for &(dest_start, src_start, range_len) in transform_rule.iter() {
-                if src_start <= current_location && current_location < src_start + range_len {
+                if src_start <= current_location
+                    && current_location < src_start + range_len
+                {
                     is_within_range = true;
                     temp = current_location - src_start + dest_start;
                     break;
@@ -153,12 +158,15 @@ pub fn find_lowest_location(map_data: &MapData) -> (u128, u128) {
                         for transform_rule in transform_chain.iter() {
                             let mut temp = 0;
                             let mut is_within_range = false;
-                            for &(dest_start, src_start, range_len) in transform_rule.iter() {
+                            for &(dest_start, src_start, range_len) in
+                                transform_rule.iter()
+                            {
                                 if src_start <= current_location
                                     && current_location < src_start + range_len
                                 {
                                     is_within_range = true;
-                                    temp = current_location - src_start + dest_start;
+                                    temp = current_location - src_start
+                                        + dest_start;
                                     break;
                                 }
                             }
@@ -177,7 +185,8 @@ pub fn find_lowest_location(map_data: &MapData) -> (u128, u128) {
         })
         .collect();
 
-    let min_location_for_seed_pairs = min_locations.into_par_iter().min().unwrap_or(u128::MAX);
+    let min_location_for_seed_pairs =
+        min_locations.into_par_iter().min().unwrap_or(u128::MAX);
 
     (min_location, min_location_for_seed_pairs)
 }

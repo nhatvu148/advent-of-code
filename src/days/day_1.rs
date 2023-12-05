@@ -7,7 +7,8 @@ use std::io::{self, BufRead};
 mod day_1_tests;
 
 pub fn extract_first_and_last_digits(input: &str) -> Option<u32> {
-    let digits: Vec<u32> = input.chars().filter_map(|c| c.to_digit(10)).collect();
+    let digits: Vec<u32> =
+        input.chars().filter_map(|c| c.to_digit(10)).collect();
     if let Some(first) = digits.first().cloned() {
         if let Some(last) = digits.last().cloned() {
             return Some(first * 10 + last);
@@ -24,9 +25,12 @@ pub fn process_file(file_path: &str) -> io::Result<u32> {
 
     for line in reader.lines() {
         if let Ok(line_content) = line {
-            let modified_input = find_and_replace_substrings(line_content.as_str());
+            let modified_input =
+                find_and_replace_substrings(line_content.as_str());
 
-            if let Some(combined_digits) = extract_first_and_last_digits(&modified_input) {
+            if let Some(combined_digits) =
+                extract_first_and_last_digits(&modified_input)
+            {
                 // println!(
                 //     "Input: {:?}, Combined Digits: {}",
                 //     line_content, combined_digits
@@ -46,8 +50,8 @@ pub fn create_word_to_number_map() -> HashMap<String, u32> {
 
     // Add mappings for individual numbers
     let singles = vec![
-        "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "1", "2", "3", "4",
-        "5", "6", "7", "8", "9",
+        "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+        "1", "2", "3", "4", "5", "6", "7", "8", "9",
     ];
     for (index, &word) in singles.iter().enumerate() {
         map.insert(word.to_string(), (index + 1) as u32);
@@ -55,7 +59,8 @@ pub fn create_word_to_number_map() -> HashMap<String, u32> {
 
     // Add mappings for tens
     let tens = vec![
-        "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety",
+        "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy",
+        "eighty", "ninety",
     ];
     for (index, &word) in tens.iter().enumerate() {
         map.insert(word.to_string(), ((index + 1) * 10).try_into().unwrap());
@@ -80,7 +85,10 @@ pub fn create_word_to_number_map() -> HashMap<String, u32> {
     map
 }
 
-pub fn find_all_substrings_in_array(input: &str, substrings: &[&str]) -> BTreeMap<usize, String> {
+pub fn find_all_substrings_in_array(
+    input: &str,
+    substrings: &[&str],
+) -> BTreeMap<usize, String> {
     let mut map = BTreeMap::new();
 
     for (_index, substring) in substrings.iter().enumerate() {
@@ -104,7 +112,8 @@ fn is_numeric(s: &str) -> bool {
 
 pub fn find_and_replace_substrings(input: &str) -> String {
     let word_to_number_map = create_word_to_number_map();
-    let mut keys: Vec<&str> = word_to_number_map.keys().map(|s| s.as_str()).collect();
+    let mut keys: Vec<&str> =
+        word_to_number_map.keys().map(|s| s.as_str()).collect();
     keys.sort_by(|a, b| b.len().cmp(&a.len()));
 
     let map = find_all_substrings_in_array(input, &keys);
@@ -137,7 +146,8 @@ pub fn find_and_replace_substrings(input: &str) -> String {
             if is_numeric(value) {
                 break;
             }
-            if let Some(&number) = word_to_number_map.get(&value.to_lowercase()) {
+            if let Some(&number) = word_to_number_map.get(&value.to_lowercase())
+            {
                 modified_input.replace_range(
                     (pos - index_offset)..(value.len() + pos - index_offset),
                     &number.to_string(),
