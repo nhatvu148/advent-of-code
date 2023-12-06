@@ -37,38 +37,8 @@ pub fn count_number_of_ways_to_beat_record(
 ) -> (u128, u128) {
     let mut counts = Vec::new();
 
-    for (id, time) in time_vector.iter().enumerate() {
-        let mut mid = 0;
-        let mut count = 0;
-        if time % 2 != 0 {
-            mid = time / 2;
-            while mid > 0 {
-                if mid * (time - mid) > distance_vector[id] {
-                    count += 2;
-                } else {
-                    break;
-                }
-
-                mid -= 1;
-            }
-        } else {
-            mid = time / 2;
-            if mid * (time - mid) > distance_vector[id] {
-                count += 1;
-                mid -= 1;
-                while mid > 0 {
-                    if mid * (time - mid) > distance_vector[id] {
-                        count += 2;
-                    } else {
-                        break;
-                    }
-
-                    mid -= 1;
-                }
-            }
-        }
-
-        counts.push(count);
+    for (id, &time) in time_vector.iter().enumerate() {
+        counts.push(calculate_count(time, distance_vector[id]));
     }
 
     let combined_time: u128 = time_vector
@@ -83,14 +53,24 @@ pub fn count_number_of_ways_to_beat_record(
         .collect::<String>()
         .parse()
         .unwrap_or_default();
-    let mut combined_counts = Vec::new();
 
-    let mut mid = 0;
+    (
+        calculate_product(&counts),
+        calculate_count(combined_time, combined_distance),
+    )
+}
+
+fn calculate_product(numbers: &Vec<u128>) -> u128 {
+    numbers.iter().product()
+}
+
+fn calculate_count(time: u128, distance: u128) -> u128 {
+    let mut mid;
     let mut count = 0;
-    if combined_time % 2 != 0 {
-        mid = combined_time / 2;
+    if time % 2 != 0 {
+        mid = time / 2;
         while mid > 0 {
-            if mid * (combined_time - mid) > combined_distance {
+            if mid * (time - mid) > distance {
                 count += 2;
             } else {
                 break;
@@ -99,12 +79,12 @@ pub fn count_number_of_ways_to_beat_record(
             mid -= 1;
         }
     } else {
-        mid = combined_time / 2;
-        if mid * (combined_time - mid) > combined_distance {
+        mid = time / 2;
+        if mid * (time - mid) > distance {
             count += 1;
             mid -= 1;
             while mid > 0 {
-                if mid * (combined_time - mid) > combined_distance {
+                if mid * (time - mid) > distance {
                     count += 2;
                 } else {
                     break;
@@ -115,18 +95,5 @@ pub fn count_number_of_ways_to_beat_record(
         }
     }
 
-    combined_counts.push(count);
-
-    // println!("counts: {:?}", counts);
-    // println!("calculate_product: {:?}", calculate_product(&counts));
-    // println!("calculate_combined_counts: {:?}", calculate_product(&combined_counts));
-
-    (
-        calculate_product(&counts),
-        calculate_product(&combined_counts),
-    )
-}
-
-fn calculate_product(numbers: &Vec<u128>) -> u128 {
-    numbers.iter().product()
+    count
 }
