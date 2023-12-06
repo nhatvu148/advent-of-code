@@ -170,23 +170,25 @@ fn test_day_5() {
 #[test]
 fn test_day_6() {
     // Define a map of file paths and their expected sums
-    let test_cases: [(&str, u32, u32); 2] = [
-        ("input/day_6_1.txt", 288, 1),
-        ("input/day_6_2.txt", 861300, 1),
+    let test_cases: [(&str, u128, u128); 2] = [
+        ("input/day_6_1.txt", 288, 71503),
+        ("input/day_6_2.txt", 861300, 28101347),
     ];
 
     // Iterate through the test cases
-    for (file_path, expected_products, expected_products1) in test_cases.iter()
+    for (file_path, expected_products, expected_combined_products) in
+        test_cases.iter()
     {
         match process_file_6(file_path) {
             Ok((time_vector, distance_vector)) => {
-                let (products, products1) =
+                let (products, combined_products) =
                     count_number_of_ways_to_beat_record(
                         &time_vector,
                         &distance_vector,
                     );
 
                 assert_eq!(products, *expected_products);
+                assert_eq!(combined_products, *expected_combined_products);
             }
             Err(err) => eprintln!("Error reading file: {}", err),
         }
