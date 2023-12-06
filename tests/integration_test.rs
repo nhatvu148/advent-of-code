@@ -10,6 +10,9 @@ use advent_of_code_2023::days::{
     },
     day_4::{find_matching_card, process_file as process_file_4},
     day_5::{find_lowest_location, process_file as process_file_5},
+    day_6::{
+        count_number_of_ways_to_beat_record, process_file as process_file_6,
+    },
 };
 
 #[ignore]
@@ -135,6 +138,7 @@ fn test_day_4() {
     }
 }
 
+#[ignore]
 #[test]
 fn test_day_5() {
     // Define a map of file paths and their expected sums
@@ -157,6 +161,32 @@ fn test_day_5() {
                     min_location_for_seed_pairs,
                     *expected_lowest_for_seed_pairs
                 );
+            }
+            Err(err) => eprintln!("Error reading file: {}", err),
+        }
+    }
+}
+
+#[test]
+fn test_day_6() {
+    // Define a map of file paths and their expected sums
+    let test_cases: [(&str, u32, u32); 2] = [
+        ("input/day_6_1.txt", 288, 1),
+        ("input/day_6_2.txt", 861300, 1),
+    ];
+
+    // Iterate through the test cases
+    for (file_path, expected_products, expected_products1) in test_cases.iter()
+    {
+        match process_file_6(file_path) {
+            Ok((time_vector, distance_vector)) => {
+                let (products, products1) =
+                    count_number_of_ways_to_beat_record(
+                        &time_vector,
+                        &distance_vector,
+                    );
+
+                assert_eq!(products, *expected_products);
             }
             Err(err) => eprintln!("Error reading file: {}", err),
         }
