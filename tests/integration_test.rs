@@ -200,16 +200,17 @@ fn test_day_6() {
 #[test]
 fn test_day_7() {
     // Define a map of file paths and their expected sums
-    let test_cases: [(&str, u32); 2] = [
-        ("input/day_7_1.txt", 6440),
-        ("input/day_7_2.txt", 250951660),
+    let test_cases: [(&str, u32, u32); 2] = [
+        ("input/day_7_1.txt", 6440, 5905),
+        ("input/day_7_2.txt", 250951660, 251481660),
     ];
 
     // Iterate through the test cases
-    for (file_path, expected_total) in test_cases.iter() {
+    for (file_path, expected_total, expected_joker_total) in test_cases.iter() {
         let result_map = process_file_7(file_path);
-        let total = calculate_total(&result_map);
+        let (total, joker_total) = calculate_total(&result_map);
 
         assert_eq!(total, *expected_total);
+        assert_eq!(joker_total, *expected_joker_total);
     }
 }
