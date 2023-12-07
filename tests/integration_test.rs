@@ -13,6 +13,7 @@ use advent_of_code_2023::days::{
     day_6::{
         count_number_of_ways_to_beat_record, process_file as process_file_6,
     },
+    day_7::{calculate_total, process_file as process_file_7},
 };
 
 #[ignore]
@@ -167,6 +168,7 @@ fn test_day_5() {
     }
 }
 
+#[ignore]
 #[test]
 fn test_day_6() {
     // Define a map of file paths and their expected sums
@@ -192,5 +194,22 @@ fn test_day_6() {
             }
             Err(err) => eprintln!("Error reading file: {}", err),
         }
+    }
+}
+
+#[test]
+fn test_day_7() {
+    // Define a map of file paths and their expected sums
+    let test_cases: [(&str, u32); 2] = [
+        ("input/day_7_1.txt", 6440),
+        ("input/day_7_2.txt", 250951660),
+    ];
+
+    // Iterate through the test cases
+    for (file_path, expected_total) in test_cases.iter() {
+        let result_map = process_file_7(file_path);
+        let total = calculate_total(&result_map);
+
+        assert_eq!(total, *expected_total);
     }
 }
