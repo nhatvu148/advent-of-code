@@ -14,7 +14,7 @@ use advent_of_code_2023::days::{
         count_number_of_ways_to_beat_record, process_file as process_file_6,
     },
     day_7::{calculate_total, process_file as process_file_7},
-    day_8::{process_file as process_file_8, traverse_graph},
+    day_8::{find_steps_lcm, process_file as process_file_8, traverse_graph},
 };
 
 #[ignore]
@@ -205,25 +205,21 @@ fn test_day_7() {
 
 #[test]
 fn test_day_8() {
-    let test_cases: [(&str, u32, u32); 2] =
-        [("input/day_8_1.txt", 2, 0), ("input/day_8_2.txt", 19099, 0)];
+    let test_cases: [(&str, u64, u64); 3] = [
+        ("input/day_8_1.txt", 2, 2),
+        ("input/day_8_2.txt", 19099, 17099847107071),
+        ("input/day_8_3.txt", 0, 6),
+    ];
 
-    for (file_path, expected_steps, _) in test_cases.iter() {
+    for (file_path, expected_steps, expected_steps_lcm) in test_cases.iter() {
         match process_file_8(file_path) {
             Ok(data) => {
-                let start_node = data
-                    .graph
-                    .keys()
-                    .next()
-                    .map(|s| s.clone())
-                    .unwrap_or_default();
-                let steps = traverse_graph(
-                    &data.graph,
-                    &start_node,
-                    &data.instructions,
-                );
+                let steps = traverse_graph(&data.graph, &data.instructions);
+
+                let steps_lcm = find_steps_lcm(&data.graph, &data.instructions);
 
                 assert_eq!(steps, *expected_steps);
+                assert_eq!(steps_lcm, *expected_steps_lcm);
             }
             Err(err) => eprintln!("Error reading file: {}", err),
         }
