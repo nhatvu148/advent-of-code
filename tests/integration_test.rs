@@ -14,19 +14,18 @@ use advent_of_code_2023::days::{
         count_number_of_ways_to_beat_record, process_file as process_file_6,
     },
     day_7::{calculate_total, process_file as process_file_7},
+    day_8::{process_file as process_file_8, traverse_graph},
 };
 
 #[ignore]
 #[test]
 fn test_day_1() {
-    // Define a map of file paths and their expected totals
     let test_cases = [
         ("input/day_1_1.txt", 142),
         ("input/day_1_2.txt", 54087),
         ("input/day_1_3.txt", 281),
     ];
 
-    // Iterate through the test cases
     for (file_path, expected_total) in test_cases.iter() {
         match process_file(file_path) {
             Ok(total) => {
@@ -40,7 +39,6 @@ fn test_day_1() {
 #[ignore]
 #[test]
 fn test_day_2() {
-    // Define a map of file paths and their expected sums
     let test_cases = [
         ("input/day_2_1.txt", 8, 2286),
         ("input/day_2_2.txt", 2679, 77607),
@@ -54,7 +52,6 @@ fn test_day_2() {
     .cloned()
     .collect();
 
-    // Iterate through the test cases
     for (file_path, expected_sum, expected_power_max) in test_cases.iter() {
         match read_games_from_file(file_path) {
             Ok(games) => {
@@ -85,13 +82,11 @@ fn test_day_2() {
 #[ignore]
 #[test]
 fn test_day_3() {
-    // Define a map of file paths and their expected sums
     let test_cases = [
         ("input/day_3_1.txt", 4361, 467835),
         ("input/day_3_2.txt", 527446, 73201705),
     ];
 
-    // Iterate through the test cases
     for (file_path, expected_sum, expected_sum_gear_ratios) in test_cases.iter()
     {
         match process_file_3(file_path) {
@@ -116,13 +111,11 @@ fn test_day_3() {
 #[ignore]
 #[test]
 fn test_day_4() {
-    // Define a map of file paths and their expected sums
     let test_cases = [
         ("input/day_4_1.txt", 13, 30),
         ("input/day_4_2.txt", 27454, 6857330),
     ];
 
-    // Iterate through the test cases
     for (file_path, expected_sum, expected_total_scratch_cards) in
         test_cases.iter()
     {
@@ -142,13 +135,11 @@ fn test_day_4() {
 #[ignore]
 #[test]
 fn test_day_5() {
-    // Define a map of file paths and their expected sums
     let test_cases: [(&str, u128, u128); 2] = [
         ("input/day_5_1.txt", 35, 46),
         ("input/day_5_2.txt", 484023871, 46294175),
     ];
 
-    // Iterate through the test cases
     for (file_path, expected_lowest, expected_lowest_for_seed_pairs) in
         test_cases.iter()
     {
@@ -171,13 +162,11 @@ fn test_day_5() {
 #[ignore]
 #[test]
 fn test_day_6() {
-    // Define a map of file paths and their expected sums
     let test_cases: [(&str, u128, u128); 2] = [
         ("input/day_6_1.txt", 288, 71503),
         ("input/day_6_2.txt", 861300, 28101347),
     ];
 
-    // Iterate through the test cases
     for (file_path, expected_products, expected_combined_products) in
         test_cases.iter()
     {
@@ -197,20 +186,46 @@ fn test_day_6() {
     }
 }
 
+#[ignore]
 #[test]
 fn test_day_7() {
-    // Define a map of file paths and their expected sums
     let test_cases: [(&str, u32, u32); 2] = [
         ("input/day_7_1.txt", 6440, 5905),
         ("input/day_7_2.txt", 250951660, 251481660),
     ];
 
-    // Iterate through the test cases
     for (file_path, expected_total, expected_joker_total) in test_cases.iter() {
         let result_map = process_file_7(file_path);
         let (total, joker_total) = calculate_total(&result_map);
 
         assert_eq!(total, *expected_total);
         assert_eq!(joker_total, *expected_joker_total);
+    }
+}
+
+#[test]
+fn test_day_8() {
+    let test_cases: [(&str, u32, u32); 2] =
+        [("input/day_8_1.txt", 2, 0), ("input/day_8_2.txt", 19099, 0)];
+
+    for (file_path, expected_steps, _) in test_cases.iter() {
+        match process_file_8(file_path) {
+            Ok(data) => {
+                let start_node = data
+                    .graph
+                    .keys()
+                    .next()
+                    .map(|s| s.clone())
+                    .unwrap_or_default();
+                let steps = traverse_graph(
+                    &data.graph,
+                    &start_node,
+                    &data.instructions,
+                );
+
+                assert_eq!(steps, *expected_steps);
+            }
+            Err(err) => eprintln!("Error reading file: {}", err),
+        }
     }
 }
