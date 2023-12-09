@@ -22,5 +22,5 @@ pub fn file_name() -> String {
                 .map(OsStr::to_string_lossy)
                 .map(|s| s.into_owned())
         })
-        .expect("find not found")
+        .expect("file not found")
 }

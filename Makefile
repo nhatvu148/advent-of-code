@@ -12,7 +12,7 @@ fmt:
 
 watch:
 ifdef OS
-	watch.cmd main -- $(ARGS)
+	watch.cmd main $(ARGS)
 else
-	sudo sh watch.sh main -- $(ARGS)
+	sudo sh watch.sh main $(ARGS)
 endif
