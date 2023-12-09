@@ -15,6 +15,7 @@ use advent_of_code_2023::days::{
     },
     day_7::{calculate_total, process_file as process_file_7},
     day_8::{find_steps_lcm, process_file as process_file_8, traverse_graph},
+    day_9::process_file as process_file_9,
 };
 
 #[ignore]
@@ -203,6 +204,7 @@ fn test_day_7() {
     }
 }
 
+#[ignore]
 #[test]
 fn test_day_8() {
     let test_cases: [(&str, u64, u64); 3] = [
@@ -223,5 +225,19 @@ fn test_day_8() {
             }
             Err(err) => eprintln!("Error reading file: {}", err),
         }
+    }
+}
+
+#[test]
+fn test_day_9() {
+    let test_cases: [(&str, i32, i32); 2] = [
+        ("input/day_9_1.txt", 114, 0),
+        ("input/day_9_2.txt", 1584748274, 0),
+    ];
+
+    for (file_path, expected_sums, _) in test_cases.iter() {
+        let sums = process_file_9(file_path);
+
+        assert_eq!(sums, *expected_sums);
     }
 }
