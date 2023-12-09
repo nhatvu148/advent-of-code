@@ -2,10 +2,6 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::{self, BufRead};
 
-#[cfg(test)]
-#[path = "../unit_tests/day_2.rs"]
-mod day_2_tests;
-
 #[derive(Debug)]
 pub struct Game {
     pub id: usize,

@@ -2,10 +2,6 @@ use std::collections::{BTreeMap, HashMap};
 use std::fs::File;
 use std::io::{self, BufRead};
 
-#[cfg(test)]
-#[path = "../unit_tests/day_1.rs"]
-mod day_1_tests;
-
 pub fn extract_first_and_last_digits(input: &str) -> Option<u32> {
     let digits: Vec<u32> =
         input.chars().filter_map(|c| c.to_digit(10)).collect();

@@ -1,4 +1,4 @@
-use advent_of_code_2023::days::{
+use advent_of_code::y2023::{
     day_1::*,
     day_2::{
         calculate_power_max_set, is_game_possible, read_games_from_file,
@@ -22,9 +22,9 @@ use advent_of_code_2023::days::{
 #[test]
 fn test_day_1() {
     let test_cases = [
-        ("input/day_1_1.txt", 142),
-        ("input/day_1_2.txt", 54087),
-        ("input/day_1_3.txt", 281),
+        ("input/y2023/day_1_1.txt", 142),
+        ("input/y2023/day_1_2.txt", 54087),
+        ("input/y2023/day_1_3.txt", 281),
     ];
 
     for (file_path, expected_total) in test_cases.iter() {
@@ -41,8 +41,8 @@ fn test_day_1() {
 #[test]
 fn test_day_2() {
     let test_cases = [
-        ("input/day_2_1.txt", 8, 2286),
-        ("input/day_2_2.txt", 2679, 77607),
+        ("input/y2023/day_2_1.txt", 8, 2286),
+        ("input/y2023/day_2_2.txt", 2679, 77607),
     ];
     let cube_counts: CubeCounts = [
         ("red".to_string(), 12),
@@ -84,8 +84,8 @@ fn test_day_2() {
 #[test]
 fn test_day_3() {
     let test_cases = [
-        ("input/day_3_1.txt", 4361, 467835),
-        ("input/day_3_2.txt", 527446, 73201705),
+        ("input/y2023/day_3_1.txt", 4361, 467835),
+        ("input/y2023/day_3_2.txt", 527446, 73201705),
     ];
 
     for (file_path, expected_sum, expected_sum_gear_ratios) in test_cases.iter()
@@ -113,8 +113,8 @@ fn test_day_3() {
 #[test]
 fn test_day_4() {
     let test_cases = [
-        ("input/day_4_1.txt", 13, 30),
-        ("input/day_4_2.txt", 27454, 6857330),
+        ("input/y2023/day_4_1.txt", 13, 30),
+        ("input/y2023/day_4_2.txt", 27454, 6857330),
     ];
 
     for (file_path, expected_sum, expected_total_scratch_cards) in
@@ -137,8 +137,8 @@ fn test_day_4() {
 #[test]
 fn test_day_5() {
     let test_cases: [(&str, u128, u128); 2] = [
-        ("input/day_5_1.txt", 35, 46),
-        ("input/day_5_2.txt", 484023871, 46294175),
+        ("input/y2023/day_5_1.txt", 35, 46),
+        ("input/y2023/day_5_2.txt", 484023871, 46294175),
     ];
 
     for (file_path, expected_lowest, expected_lowest_for_seed_pairs) in
@@ -164,8 +164,8 @@ fn test_day_5() {
 #[test]
 fn test_day_6() {
     let test_cases: [(&str, u128, u128); 2] = [
-        ("input/day_6_1.txt", 288, 71503),
-        ("input/day_6_2.txt", 861300, 28101347),
+        ("input/y2023/day_6_1.txt", 288, 71503),
+        ("input/y2023/day_6_2.txt", 861300, 28101347),
     ];
 
     for (file_path, expected_products, expected_combined_products) in
@@ -191,8 +191,8 @@ fn test_day_6() {
 #[test]
 fn test_day_7() {
     let test_cases: [(&str, u32, u32); 2] = [
-        ("input/day_7_1.txt", 6440, 5905),
-        ("input/day_7_2.txt", 250951660, 251481660),
+        ("input/y2023/day_7_1.txt", 6440, 5905),
+        ("input/y2023/day_7_2.txt", 250951660, 251481660),
     ];
 
     for (file_path, expected_total, expected_joker_total) in test_cases.iter() {
@@ -208,9 +208,9 @@ fn test_day_7() {
 #[test]
 fn test_day_8() {
     let test_cases: [(&str, u64, u64); 3] = [
-        ("input/day_8_1.txt", 2, 2),
-        ("input/day_8_2.txt", 19099, 17099847107071),
-        ("input/day_8_3.txt", 0, 6),
+        ("input/y2023/day_8_1.txt", 2, 2),
+        ("input/y2023/day_8_2.txt", 19099, 17099847107071),
+        ("input/y2023/day_8_3.txt", 0, 6),
     ];
 
     for (file_path, expected_steps, expected_steps_lcm) in test_cases.iter() {
@@ -231,8 +231,8 @@ fn test_day_8() {
 #[test]
 fn test_day_9() {
     let test_cases: [(&str, i32, i32); 2] = [
-        ("input/day_9_1.txt", 114, 2),
-        ("input/day_9_2.txt", 1584748274, 1026),
+        ("input/y2023/day_9_1.txt", 114, 2),
+        ("input/y2023/day_9_2.txt", 1584748274, 1026),
     ];
 
     for (file_path, expected_end_sums, expected_start_sums) in test_cases.iter()

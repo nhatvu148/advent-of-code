@@ -4,10 +4,6 @@ use std::fs::File;
 use std::hash::{Hash, Hasher};
 use std::io::{self, BufRead};
 
-#[cfg(test)]
-#[path = "../unit_tests/day_3.rs"]
-mod day_3_tests;
-
 fn split_string_to_numbers(input: &str) -> Vec<(usize, usize, i32)> {
     let mut start_idx = None;
     let mut end_idx = None;
