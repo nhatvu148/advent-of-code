@@ -231,13 +231,15 @@ fn test_day_8() {
 #[test]
 fn test_day_9() {
     let test_cases: [(&str, i32, i32); 2] = [
-        ("input/day_9_1.txt", 114, 0),
-        ("input/day_9_2.txt", 1584748274, 0),
+        ("input/day_9_1.txt", 114, 2),
+        ("input/day_9_2.txt", 1584748274, 1026),
     ];
 
-    for (file_path, expected_sums, _) in test_cases.iter() {
-        let sums = process_file_9(file_path);
+    for (file_path, expected_end_sums, expected_start_sums) in test_cases.iter()
+    {
+        let (start_sums, end_sums) = process_file_9(file_path);
 
-        assert_eq!(sums, *expected_sums);
+        assert_eq!(end_sums, *expected_end_sums);
+        assert_eq!(start_sums, *expected_start_sums);
     }
 }
