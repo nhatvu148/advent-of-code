@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::{self, BufRead};
 
-pub fn process_file(file_path: &str) -> u32 {
+pub fn process_file(file_path: &str) -> (u32, u32) {
     let mut batch: Vec<u32> = Vec::new();
     let mut sums: Vec<u32> = Vec::new();
 
@@ -34,6 +34,21 @@ pub fn process_file(file_path: &str) -> u32 {
         eprintln!("Error opening file: {}", file_path);
     }
 
-    sums.iter()
-        .fold(u32::MIN, |current_max, &x| current_max.max(x))
+    let max = sums
+        .iter()
+        .fold(u32::MIN, |current_max, &x| current_max.max(x));
+
+    let top3: Vec<u32> = sums.iter().fold(vec![], |mut acc, &x| {
+        if acc.len() < 3 {
+            acc.push(x);
+            acc.sort_by(|a, b| b.cmp(a)); // Sort in descending order
+        } else if x > *acc.last().unwrap() {
+            acc.pop();
+            acc.push(x);
+            acc.sort_by(|a, b| b.cmp(a)); // Sort in descending order
+        }
+        acc
+    });
+
+    (max, top3.iter().fold(0, |acc, &x| acc + x))
 }
