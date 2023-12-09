@@ -16,7 +16,7 @@ pub fn process_file(file_path: &str) -> (i32, i32) {
                     .split_whitespace()
                     .filter_map(|s| s.parse().ok())
                     .collect();
-                
+
                 let (start, end) = find_next_history_value(&values);
                 start_sums.push(start);
                 end_sums.push(end);
@@ -63,11 +63,7 @@ fn find_next_history_value(values: &Vec<i32>) -> (i32, i32) {
     }
 
     (
-        start_offsets
-            .iter()
-            .rev()
-            .enumerate()
-            .fold(0, |acc, (i, &x)| if i == 0 { x } else { x - acc }),
+        start_offsets.iter().rev().fold(0, |acc, &x| x - acc),
         end_offsets.iter().fold(0, |acc, &x| acc + x),
     )
 }
