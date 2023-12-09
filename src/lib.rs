@@ -1,10 +1,11 @@
 use std::{env, ffi::OsStr, path::PathBuf, time::Instant};
 
+pub mod y2022;
 pub mod y2023;
 
 pub fn runner(f: impl Fn(&str)) {
     let start_time = Instant::now();
-    let file_path = format!("input/y2023/{}", file_name());
+    let file_path = format!("input/y2022/{}", file_name());
 
     f(&file_path);
 
