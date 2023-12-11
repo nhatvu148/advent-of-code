@@ -1,5 +1,6 @@
 use advent_of_code::y2023::{
     day_1::*,
+    day_10::process_file as process_file_10,
     day_2::{
         calculate_power_max_set, is_game_possible, read_games_from_file,
         CubeCounts,
@@ -16,7 +17,6 @@ use advent_of_code::y2023::{
     day_7::{calculate_total, process_file as process_file_7},
     day_8::{find_steps_lcm, process_file as process_file_8, traverse_graph},
     day_9::process_file as process_file_9,
-    day_10::process_file as process_file_10,
 };
 
 #[ignore]
@@ -248,16 +248,21 @@ fn test_day_9() {
 
 #[test]
 fn test_day_10() {
-    let test_cases: [(&str, i32, i32); 3] = [
-        ("input/y2023/day_10_1.txt", 4, 0),
-        ("input/y2023/day_10_2.txt", 8, 0),
-        ("input/y2023/day_10_3.txt", 6890, 0),
+    let test_cases: [(&str, i32, i32); 6] = [
+        ("input/y2023/day_10_1.txt", 4, 1),
+        ("input/y2023/day_10_2.txt", 8, 1),
+        ("input/y2023/day_10_3.txt", 6890, 453),
+        ("input/y2023/day_10_4.txt", 23, 4),
+        ("input/y2023/day_10_5.txt", 70, 8),
+        ("input/y2023/day_10_6.txt", 80, 10),
     ];
 
-    for (file_path, expected_steps, _) in test_cases.iter()
+    for (file_path, expected_steps, expected_enclosed_count) in
+        test_cases.iter()
     {
-        let steps = process_file_10(file_path);
+        let (steps, enclosed_count) = process_file_10(file_path);
 
         assert_eq!(steps, *expected_steps);
+        assert_eq!(enclosed_count, *expected_enclosed_count);
     }
 }

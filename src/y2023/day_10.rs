@@ -92,59 +92,6 @@ impl Point {
         self.pipe = pipe.clone();
     }
 
-    pub fn is_connected_to(
-        &self,
-        other: &Point,
-        direction: &Direction,
-    ) -> bool {
-        match (self.pipe, other.pipe, direction) {
-            (Pipe::Horizontal(_, _), Pipe::Horizontal(_, _), Direction::Left)
-            | (Pipe::Horizontal(_, _), Pipe::Horizontal(_, _), Direction::Right)
-            | (Pipe::Horizontal(_, _), Pipe::NorthEast(_, _), Direction::Left)
-            | (Pipe::Horizontal(_, _), Pipe::SouthEast(_, _), Direction::Left)
-            | (Pipe::Horizontal(_, _), Pipe::NorthWest(_, _), Direction::Right)
-            | (Pipe::Horizontal(_, _), Pipe::SouthWest(_, _), Direction::Right)
-
-            | (Pipe::Vertical(_, _), Pipe::Vertical(_, _), Direction::Top)
-            | (Pipe::Vertical(_, _), Pipe::Vertical(_, _), Direction::Down)
-            | (Pipe::Vertical(_, _), Pipe::SouthWest(_, _), Direction::Top)
-            | (Pipe::Vertical(_, _), Pipe::SouthEast(_, _), Direction::Top)
-            | (Pipe::Vertical(_, _), Pipe::NorthWest(_, _), Direction::Down)
-            | (Pipe::Vertical(_, _), Pipe::NorthEast(_, _), Direction::Down)
-
-            | (Pipe::NorthEast(_, _), Pipe::Vertical(_, _), Direction::Top)
-            | (Pipe::NorthEast(_, _), Pipe::SouthWest(_, _), Direction::Top)
-            | (Pipe::NorthEast(_, _), Pipe::SouthEast(_, _), Direction::Top)
-            | (Pipe::NorthEast(_, _), Pipe::Horizontal(_, _), Direction::Right)
-            | (Pipe::NorthEast(_, _), Pipe::NorthWest(_, _), Direction::Right)
-            | (Pipe::NorthEast(_, _), Pipe::SouthWest(_, _), Direction::Right)
-
-            | (Pipe::NorthWest(_, _), Pipe::Vertical(_, _), Direction::Top)
-            | (Pipe::NorthWest(_, _), Pipe::SouthWest(_, _), Direction::Top)
-            | (Pipe::NorthWest(_, _), Pipe::SouthEast(_, _), Direction::Top)
-            | (Pipe::NorthWest(_, _), Pipe::Horizontal(_, _), Direction::Left)
-            | (Pipe::NorthWest(_, _), Pipe::SouthEast(_, _), Direction::Left)
-            | (Pipe::NorthWest(_, _), Pipe::NorthEast(_, _), Direction::Left)
-
-            | (Pipe::SouthWest(_, _), Pipe::Vertical(_, _), Direction::Down)
-            | (Pipe::SouthWest(_, _), Pipe::NorthWest(_, _), Direction::Down)
-            | (Pipe::SouthWest(_, _), Pipe::NorthEast(_, _), Direction::Down)
-            | (Pipe::SouthWest(_, _), Pipe::Horizontal(_, _), Direction::Left)
-            | (Pipe::SouthWest(_, _), Pipe::NorthEast(_, _), Direction::Left)
-            | (Pipe::SouthWest(_, _), Pipe::SouthEast(_, _), Direction::Left)
-
-            | (Pipe::SouthEast(_, _), Pipe::Vertical(_, _), Direction::Down)
-            | (Pipe::SouthEast(_, _), Pipe::NorthWest(_, _), Direction::Down)
-            | (Pipe::SouthEast(_, _), Pipe::NorthEast(_, _), Direction::Down)
-            | (Pipe::SouthEast(_, _), Pipe::Horizontal(_, _), Direction::Right)
-            | (Pipe::SouthEast(_, _), Pipe::NorthWest(_, _), Direction::Right)
-            | (Pipe::SouthEast(_, _), Pipe::SouthWest(_, _), Direction::Right)
-             => true,
-
-            _ => false,
-        }
-    }
-
     pub fn is_start_point_connected_to(
         &self,
         other: &Point,
@@ -154,19 +101,15 @@ impl Point {
             (Pipe::Vertical(_, _), Direction::Top)
             | (Pipe::SouthWest(_, _), Direction::Top)
             | (Pipe::SouthEast(_, _), Direction::Top)
-            
             | (Pipe::Vertical(_, _), Direction::Down)
             | (Pipe::NorthWest(_, _), Direction::Down)
             | (Pipe::NorthEast(_, _), Direction::Down)
-
             | (Pipe::Horizontal(_, _), Direction::Left)
             | (Pipe::SouthEast(_, _), Direction::Left)
             | (Pipe::NorthEast(_, _), Direction::Left)
-
             | (Pipe::Horizontal(_, _), Direction::Right)
             | (Pipe::SouthWest(_, _), Direction::Right)
-            | (Pipe::NorthWest(_, _), Direction::Right)
-             => true,
+            | (Pipe::NorthWest(_, _), Direction::Right) => true,
 
             _ => false,
         }
@@ -264,7 +207,7 @@ fn traverse(
     current_position: &mut Point,
     matrix: &Vec<Vec<char>>,
     direction: &Direction,
-) {
+) -> (f64, f64) {
     let (mut dx, mut dy) = (0, 0);
     match direction {
         Direction::Top => {
@@ -282,10 +225,13 @@ fn traverse(
         _ => (),
     }
 
-    let next_pipe = matrix[(current_position.y as i32 + dy) as usize]
-        [(current_position.x as i32 + dx) as usize]
-        .into();
+    let new_x = (current_position.x as i32 + dx) as usize;
+    let new_y = (current_position.y as i32 + dy) as usize;
+
+    let next_pipe = matrix[new_y][new_x].into();
     current_position.step(dx, dy, &next_pipe);
+
+    (new_x as f64, new_y as f64)
 }
 
 fn peek_next_point(
@@ -314,27 +260,54 @@ fn peek_next_point(
         && (current_position.x as i32 + dx) as usize == last_position.x
 }
 
-fn explore_maze(matrix: &Vec<Vec<char>>, start_coordinate: (usize, usize)) -> i32 {
+fn is_point_in_polygon(point: &(f64, f64), polygon: &Vec<(f64, f64)>) -> bool {
+    // ray tracing
+    let mut count = 0;
+
+    for i in 0..polygon.len() {
+        let j = (i + 1) % polygon.len();
+        let pi = &polygon[i];
+        let pj = &polygon[j];
+
+        if (pi.1 > point.1) != (pj.1 > point.1)
+            && point.0 < (pj.0 - pi.0) * (point.1 - pi.1) / (pj.1 - pi.1) + pi.0
+        {
+            count += 1;
+        }
+    }
+
+    count % 2 == 1
+}
+
+fn explore_maze(
+    matrix: &Vec<Vec<char>>,
+    start_coordinate: (usize, usize),
+) -> (i32, i32) {
     let mut current_position =
         Point::new(start_coordinate.0, start_coordinate.1, Pipe::StartPosition);
     let mut last_position: Point;
     let mut count = 0;
+    let mut enclosed_count = 0;
+    let mut polygon: Vec<(f64, f64)> =
+        vec![(current_position.x as f64, current_position.y as f64)];
 
     let start_directions = get_start_directions(matrix, &current_position);
-    println!("start_directions: {:?}", start_directions);
+    // println!("start_directions: {:?}", start_directions);
 
     let mut found = false;
     for start_direction in start_directions.iter() {
         // first traversal
         last_position = current_position.clone();
-        traverse(&mut current_position, &matrix, start_direction);
+        let new_coordinate =
+            traverse(&mut current_position, &matrix, start_direction);
+        polygon.push(new_coordinate);
         count += 1;
 
         loop {
             let next_pipe = current_position.pipe.clone();
             let new_directions: (Direction, Direction) =
                 next_pipe.get_directions();
-            println!("next_pipe: {:?}", next_pipe);
+            // println!("next_pipe: {:?}", next_pipe);
 
             for direction in
                 new_directions.0.iter().chain(new_directions.1.iter())
@@ -345,9 +318,11 @@ fn explore_maze(matrix: &Vec<Vec<char>>, start_coordinate: (usize, usize)) -> i3
                     direction,
                 );
                 if !is_next_point_ok {
-                    println!("go this direction next {:?}", direction);
+                    // println!("go this direction next {:?}", direction);
                     last_position = current_position.clone();
-                    traverse(&mut current_position, &matrix, direction);
+                    let new_coordinate =
+                        traverse(&mut current_position, &matrix, direction);
+                    polygon.push(new_coordinate);
                     count += 1;
                     break;
                 }
@@ -356,7 +331,7 @@ fn explore_maze(matrix: &Vec<Vec<char>>, start_coordinate: (usize, usize)) -> i3
             if current_position.x == start_coordinate.0
                 && current_position.y == start_coordinate.1
             {
-                println!("reached start position");
+                // println!("reached start position");
                 found = true;
                 break;
             }
@@ -367,10 +342,24 @@ fn explore_maze(matrix: &Vec<Vec<char>>, start_coordinate: (usize, usize)) -> i3
         }
     }
 
-    count / 2 
+    for y in 0..matrix.len() {
+        for x in 0..matrix[y].len() {
+            if !polygon.contains(&(x as f64, y as f64))
+                && is_point_in_polygon(&(x as f64, y as f64), &polygon)
+            {
+                enclosed_count += 1;
+                // println!("enclosed polygon: {:?}", &(x as f64, y as f64));
+            }
+        }
+    }
+
+    // println!("polygon: {:?}", polygon);
+    // println!("enclosed_count: {}", enclosed_count);
+
+    (count / 2, enclosed_count)
 }
 
-pub fn process_file(file_path: &str) -> i32 {
+pub fn process_file(file_path: &str) -> (i32, i32) {
     if let Ok(file) = File::open(file_path) {
         let reader = io::BufReader::new(file);
 
@@ -385,26 +374,26 @@ pub fn process_file(file_path: &str) -> i32 {
 
                 // Check for 'S' and store its coordinate
                 if let Some(col) = matrix[row].iter().position(|&c| c == 'S') {
-                    start_coordinate = Some((row, col));
+                    start_coordinate = Some((col, row));
                 }
             }
         }
 
-        for row in matrix.iter() {
-            println!("{:?}", row);
-        }
+        // for row in matrix.iter() {
+        //     println!("{:?}", row);
+        // }
 
-        if let Some((row, col)) = start_coordinate {
-            println!("Start coordinate: ({}, {})", col, row);
+        if let Some((col, row)) = start_coordinate {
+            // println!("Start coordinate: ({}, {})", col, row);
 
             // Explore the maze starting from the given coordinate
             explore_maze(&matrix, (col, row))
         } else {
-            println!("No 'S' found in the matrix.");
-            0
+            // println!("No 'S' found in the matrix.");
+            (0, 0)
         }
     } else {
         eprintln!("Error opening file: {}", file_path);
-        0
+        (0, 0)
     }
 }
