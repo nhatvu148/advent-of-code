@@ -2,7 +2,8 @@ use advent_of_code::y2023::{
     day_1::*,
     day_10::process_file as process_file_10,
     day_11::{
-        find_galaxies, find_shortest_path, process_file as process_file_11,
+        expand_galaxy, find_galaxies, find_shortest_path,
+        process_file as process_file_11,
     },
     day_2::{
         calculate_power_max_set, is_game_possible, read_games_from_file,
@@ -270,6 +271,7 @@ fn test_day_11() {
 
     for (file_path, expected_sum_length, _) in test_cases.iter() {
         let galaxies_map = process_file_11(file_path);
+        let expanded_galaxies_map = expand_galaxy(galaxies_map, 2);
         let mut sum_length = 0;
 
         // Print the galaxies for demonstration
@@ -280,7 +282,7 @@ fn test_day_11() {
         //     println!();
         // }
 
-        let galaxies = find_galaxies(&galaxies_map);
+        let galaxies = find_galaxies(&expanded_galaxies_map);
         // println!("{:?}", galaxies);
 
         // Find and print the shortest paths between all pairs of galaxies
