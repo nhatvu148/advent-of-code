@@ -1,6 +1,9 @@
 use advent_of_code::y2023::{
     day_1::*,
     day_10::process_file as process_file_10,
+    day_11::{
+        find_galaxies, find_shortest_path, process_file as process_file_11,
+    },
     day_2::{
         calculate_power_max_set, is_game_possible, read_games_from_file,
         CubeCounts,
@@ -255,5 +258,41 @@ fn test_day_10() {
 
         assert_eq!(steps, *expected_steps);
         assert_eq!(enclosed_count, *expected_enclosed_count);
+    }
+}
+
+#[test]
+fn test_day_11() {
+    let test_cases: [(&str, usize, usize); 2] = [
+        ("input/y2023/day_11_1.txt", 374, 1),
+        ("input/y2023/day_11_2.txt", 10276166, 1),
+    ];
+
+    for (file_path, expected_sum_length, _) in test_cases.iter() {
+        let galaxies_map = process_file_11(file_path);
+        let mut sum_length = 0;
+
+        // Print the galaxies for demonstration
+        // for row in &galaxies_map {
+        //     for cell in row {
+        //         print!("{}", cell);
+        //     }
+        //     println!();
+        // }
+
+        let galaxies = find_galaxies(&galaxies_map);
+        // println!("{:?}", galaxies);
+
+        // Find and print the shortest paths between all pairs of galaxies
+        for (i, g1) in galaxies.iter().enumerate() {
+            for g2 in &galaxies[i + 1..] {
+                let (_path, length) = find_shortest_path(*g1, *g2);
+                sum_length += length;
+            }
+        }
+
+        println!("sum length: {}", sum_length);
+
+        assert_eq!(sum_length, *expected_sum_length);
     }
 }
