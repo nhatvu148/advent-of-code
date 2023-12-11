@@ -24,21 +24,26 @@ pub fn process_file(filename: &str) -> Vec<Vec<char>> {
         }
     }
 
+    galaxies
+}
+
+pub fn expand_galaxy(galaxies: Vec<Vec<char>>, n: usize) -> Vec<Vec<char>> {
     let rows_with_galaxies: Vec<bool> =
         galaxies.iter().map(|row| row.contains(&'#')).collect();
 
-    // Double the size of rows without galaxies
+    // Expand rows
     let mut new_galaxies: Vec<Vec<char>> = Vec::new();
     for (row, has_galaxies) in galaxies.iter().zip(rows_with_galaxies.iter()) {
         if *has_galaxies {
             new_galaxies.push(row.clone());
         } else {
-            new_galaxies.push(row.clone());
-            new_galaxies.push(row.clone());
+            for _ in 0..n {
+                new_galaxies.push(row.clone());
+            }
         }
     }
 
-    // Double the size of columns without galaxies
+    // Expand columns
     let num_cols = new_galaxies[0].len();
     for col in (0..num_cols).rev() {
         let has_galaxies_in_col =
@@ -46,7 +51,9 @@ pub fn process_file(filename: &str) -> Vec<Vec<char>> {
         if !has_galaxies_in_col {
             for row in &mut new_galaxies {
                 let character = row[col];
-                row.insert(col + 1, character); // Insert the same character again to double the size
+                for i in 1..n {
+                    row.insert(col + i, character);
+                }
             }
         }
     }
