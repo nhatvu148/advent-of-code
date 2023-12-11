@@ -19,7 +19,6 @@ use advent_of_code::y2023::{
     day_9::process_file as process_file_9,
 };
 
-#[ignore]
 #[test]
 fn test_day_1() {
     let test_cases = [
@@ -38,7 +37,6 @@ fn test_day_1() {
     }
 }
 
-#[ignore]
 #[test]
 fn test_day_2() {
     let test_cases = [
@@ -81,7 +79,6 @@ fn test_day_2() {
     }
 }
 
-#[ignore]
 #[test]
 fn test_day_3() {
     let test_cases = [
@@ -110,7 +107,6 @@ fn test_day_3() {
     }
 }
 
-#[ignore]
 #[test]
 fn test_day_4() {
     let test_cases = [
@@ -134,7 +130,6 @@ fn test_day_4() {
     }
 }
 
-#[ignore]
 #[test]
 fn test_day_5() {
     let test_cases: [(&str, u128, u128); 2] = [
@@ -161,7 +156,6 @@ fn test_day_5() {
     }
 }
 
-#[ignore]
 #[test]
 fn test_day_6() {
     let test_cases: [(&str, u128, u128); 2] = [
@@ -188,7 +182,6 @@ fn test_day_6() {
     }
 }
 
-#[ignore]
 #[test]
 fn test_day_7() {
     let test_cases: [(&str, u32, u32); 2] = [
@@ -205,7 +198,6 @@ fn test_day_7() {
     }
 }
 
-#[ignore]
 #[test]
 fn test_day_8() {
     let test_cases: [(&str, u64, u64); 3] = [
@@ -229,7 +221,6 @@ fn test_day_8() {
     }
 }
 
-#[ignore]
 #[test]
 fn test_day_9() {
     let test_cases: [(&str, i32, i32); 2] = [
