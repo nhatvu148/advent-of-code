@@ -55,7 +55,7 @@ fn parse_line(line: &str) -> (String, Vec<usize>) {
     (records, conditions)
 }
 
-pub fn process_file(file_path: &str) {
+pub fn process_file(file_path: &str) -> usize {
     if let Ok(file) = File::open(file_path) {
         let reader = io::BufReader::new(file);
 
@@ -93,7 +93,9 @@ pub fn process_file(file_path: &str) {
             .reduce(|| 0, |a, b| a + b);
 
         println!("Total sum: {}", sum);
+        sum
     } else {
         eprintln!("Error opening file: {}", file_path);
+        0
     }
 }

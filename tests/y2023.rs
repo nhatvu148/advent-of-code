@@ -4,6 +4,7 @@ use advent_of_code::y2023::{
     day_11::{
         get_sum_length, get_sum_length_n, process_file as process_file_11,
     },
+    day_12::process_file as process_file_12,
     day_2::{
         calculate_power_max_set, is_game_possible, read_games_from_file,
         CubeCounts,
@@ -279,5 +280,19 @@ fn test_day_11() {
 
         assert_eq!(sum_length, *expected_sum_length);
         assert_eq!(sum_length_n, *expected_sum_length_n);
+    }
+}
+
+#[test]
+fn test_day_12() {
+    let test_cases: [(&str, usize, usize); 2] = [
+        ("input/y2023/day_12_1.txt", 21, 1),
+        ("input/y2023/day_12_2.txt", 7221, 1),
+    ];
+
+    for (file_path, expected_sum, _) in test_cases.iter() {
+        let sum = process_file_12(file_path);
+
+        assert_eq!(sum, *expected_sum);
     }
 }
