@@ -55,6 +55,20 @@ fn parse_line(line: &str) -> (String, Vec<usize>) {
     (records, conditions)
 }
 
+fn unfold(records: &str, conditions: &[usize]) -> (String, Vec<usize>) {
+    let unfolded_records: String = std::iter::repeat(records)
+        .take(5)
+        .collect::<Vec<&str>>()
+        .join("?");
+
+    let unfolded_conditions: Vec<usize> = std::iter::repeat(conditions)
+        .take(5)
+        .flat_map(|condition| condition.iter().cloned())
+        .collect();
+
+    (unfolded_records, unfolded_conditions)
+}
+
 pub fn process_file(file_path: &str) -> usize {
     if let Ok(file) = File::open(file_path) {
         let reader = io::BufReader::new(file);
@@ -65,6 +79,7 @@ pub fn process_file(file_path: &str) -> usize {
             .map(|line| {
                 let line = line.unwrap();
                 let (records, conditions) = parse_line(&line);
+                // let (records, conditions) = unfold(&records, &conditions);
                 // println!("Records: {:?}, Conditions: {:?}", records, conditions);
 
                 let mut chars: Vec<char> = records.chars().collect();
