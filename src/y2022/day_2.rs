@@ -45,6 +45,33 @@ impl HandShape {
             _ => 0,
         }
     }
+
+    pub fn convert_score(&self, other: &HandShape) -> i32 {
+        match self {
+            // Should lose
+            HandShape::X => match other {
+                HandShape::A => HandShape::Z.get_score(),
+                HandShape::B => HandShape::X.get_score(),
+                HandShape::C => HandShape::Y.get_score(),
+                _ => 0,
+            },
+            // Should draw
+            HandShape::Y => match other {
+                HandShape::A => HandShape::X.get_score() + 3,
+                HandShape::B => HandShape::Y.get_score() + 3,
+                HandShape::C => HandShape::Z.get_score() + 3,
+                _ => 0,
+            },
+            // Should win
+            HandShape::Z => match other {
+                HandShape::A => HandShape::Y.get_score() + 6,
+                HandShape::B => HandShape::Z.get_score() + 6,
+                HandShape::C => HandShape::X.get_score() + 6,
+                _ => 0,
+            },
+            _ => 0,
+        }
+    }
 }
 
 impl Into<HandShape> for char {
@@ -53,15 +80,15 @@ impl Into<HandShape> for char {
     }
 }
 
-pub fn process_file(file_path: &str) -> i32 {
+pub fn process_file(file_path: &str) -> (i32, i32) {
     if let Ok(file) = File::open(file_path) {
         let reader = io::BufReader::new(file);
 
-        // Process each line in the file
         let mut total_score = 0;
+        let mut total_converted_score = 0;
+
         for line in reader.lines() {
             let line = line.unwrap();
-            println!("line: {:?}", line);
             let mut iter = line.split_whitespace();
 
             while let (Some(opponent_choice), Some(player_choice)) =
@@ -78,21 +105,17 @@ pub fn process_file(file_path: &str) -> i32 {
                     if let (Some(opponent_shape), Some(player_shape)) =
                         (opponent_shape, player_shape)
                     {
-                        println!(
-                            "opponent_choice: {:?}, player_choice: {:?}",
-                            opponent_shape, player_shape
-                        );
+                        // println!(
+                        //     "opponent_choice: {:?}, player_choice: {:?}",
+                        //     opponent_shape, player_shape
+                        // );
                         let result = opponent_shape.compare(&player_shape);
                         let score = result + player_shape.get_score();
                         total_score += score;
-                        println!("score: {}", score);
 
-                        // match result {
-                        //     0 => println!("You lose!"),
-                        //     3 => println!("It's a draw!"),
-                        //     6 => println!("You win!"),
-                        //     _ => println!("Invalid choices."),
-                        // }
+                        let converted_result =
+                            player_shape.convert_score(&opponent_shape);
+                        total_converted_score += converted_result;
                     } else {
                         println!("Invalid choices.");
                     }
@@ -100,10 +123,9 @@ pub fn process_file(file_path: &str) -> i32 {
             }
         }
 
-        println!("total_score: {}", total_score);
-        total_score
+        (total_score, total_converted_score)
     } else {
         eprintln!("Error opening file: {}", file_path);
-        0
+        (0, 0)
     }
 }

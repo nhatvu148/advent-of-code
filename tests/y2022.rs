@@ -21,13 +21,16 @@ fn test_day_1() {
 #[test]
 fn test_day_2() {
     let test_cases = [
-        ("input/y2022/day_2_1.txt", 15, 1),
-        ("input/y2022/day_2_2.txt", 13565, 1),
+        ("input/y2022/day_2_1.txt", 15, 12),
+        ("input/y2022/day_2_2.txt", 13565, 12424),
     ];
 
-    for (file_path, expected_total_score, _) in test_cases.iter() {
-        let total_score = process_file_2(file_path);
+    for (file_path, expected_total_score, expected_total_converted_score) in
+        test_cases.iter()
+    {
+        let (total_score, total_converted_score) = process_file_2(file_path);
 
         assert_eq!(total_score, *expected_total_score);
+        assert_eq!(total_converted_score, *expected_total_converted_score);
     }
 }
