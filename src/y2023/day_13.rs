@@ -1,55 +1,18 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-pub fn process_file(
-    filename: &str,
-) -> Vec<(Vec<Vec<char>>, Option<usize>, Option<usize>)> {
-    let file = match File::open(filename) {
-        Ok(file) => file,
-        Err(_) => panic!("Unable to open the file."),
-    };
-
+pub fn process_file(filename: &str) -> Vec<(Vec<Vec<char>>, Option<usize>, Option<usize>)> {
+    let file = File::open(filename).expect("Unable to open the file.");
     let reader = BufReader::new(file);
 
     let mut result = Vec::new();
-    let mut current_block: Vec<Vec<char>> = Vec::new(); // current_block is now a 2D vector
+    let mut current_block = Vec::new();
 
     for line in reader.lines() {
         if let Ok(row) = line {
             if row.is_empty() {
                 // Empty line indicates the end of a block, so add the current_block to the result
-                if !current_block.is_empty() {
-                    let tranposed = transpose_matrix(&current_block);
-                    let horizontal_reflection =
-                        find_vertical_reflection(&tranposed);
-                    let vertical_reflection =
-                        find_vertical_reflection(&current_block);
-
-                    // println!("current_block: ");
-                    // for row in &current_block {
-                    //     for ch in row {
-                    //         print!("{} ", ch);
-                    //     }
-                    //     println!();
-                    // }
-                    // println!();
-
-                    // println!("tranposed: ");
-                    // for row in &tranposed {
-                    //     for ch in row {
-                    //         print!("{} ", ch);
-                    //     }
-                    //     println!();
-                    // }
-                    // println!();
-
-                    result.push((
-                        current_block.clone(),
-                        horizontal_reflection,
-                        vertical_reflection,
-                    ));
-                    current_block.clear();
-                }
+                process_block(&mut result, &mut current_block);
             } else {
                 // Non-empty line, add each char to the current_block
                 current_block.push(row.chars().collect());
@@ -58,42 +21,31 @@ pub fn process_file(
     }
 
     // Add the last block if it's not empty
-    if !current_block.is_empty() {
-        let tranposed = transpose_matrix(&current_block);
-        let horizontal_reflection = find_vertical_reflection(&tranposed);
-        let vertical_reflection = find_vertical_reflection(&current_block);
-
-        // let horizontal_reflection2 = find_vertical_reflection(&tranposed);
-        // println!("vertical_reflection: {:?}", horizontal_reflection2);
-        // println!("current_block: ");
-        // for row in &current_block {
-        //     for ch in row {
-        //         print!("{} ", ch);
-        //     }
-        //     println!();
-        // }
-        // println!();
-
-        // println!("tranposed: ");
-        // for row in &tranposed {
-        //     for ch in row {
-        //         print!("{} ", ch);
-        //     }
-        //     println!();
-        // }
-        // println!();
-
-        result.push((
-            current_block,
-            horizontal_reflection,
-            vertical_reflection,
-        ));
-    }
+    process_block(&mut result, &mut current_block);
 
     result
 }
 
-fn transpose_matrix(matrix: &Vec<Vec<char>>) -> Vec<Vec<char>> {
+fn process_block(
+    result: &mut Vec<(Vec<Vec<char>>, Option<usize>, Option<usize>)>,
+    current_block: &mut Vec<Vec<char>>,
+) {
+    if !current_block.is_empty() {
+        let transposed = transpose_matrix(&current_block);
+        let horizontal_reflection = find_vertical_reflection(&transposed);
+        let vertical_reflection = find_vertical_reflection(&current_block);
+
+        result.push((
+            current_block.clone(),
+            horizontal_reflection,
+            vertical_reflection,
+        ));
+        current_block.clear();
+    }
+}
+
+
+pub fn transpose_matrix(matrix: &Vec<Vec<char>>) -> Vec<Vec<char>> {
     let rows = matrix.len();
     let cols = matrix[0].len();
 
@@ -109,7 +61,7 @@ fn transpose_matrix(matrix: &Vec<Vec<char>>) -> Vec<Vec<char>> {
     transposed_matrix
 }
 
-fn find_vertical_reflection(block: &Vec<Vec<char>>) -> Option<usize> {
+pub fn find_vertical_reflection(block: &Vec<Vec<char>>) -> Option<usize> {
     let columns = block[0].len();
     if columns < 2 {
         return None;
@@ -155,6 +107,19 @@ fn find_vertical_reflection(block: &Vec<Vec<char>>) -> Option<usize> {
     }
 
     None // Return None if no reflection line is found
+}
+
+pub fn smudge_block(block: &Vec<Vec<char>>, i: usize, j: usize) -> Vec<Vec<char>> {
+    let mut new_block = block.clone();
+
+    // Change the element at the specified position
+    new_block[i][j] = if new_block[i][j] == '#' {
+        '.'
+    } else {
+        '#'
+    };
+
+    new_block
 }
 
 pub fn get_sum(
