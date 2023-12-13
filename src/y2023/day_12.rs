@@ -26,6 +26,29 @@ fn generate_cases(
     }
 }
 
+fn generate_cases_iterative(chars: &mut Vec<char>, results: &mut Vec<String>) {
+    let mut stack: Vec<(usize, Vec<char>)> = Vec::new();
+
+    stack.push((0, chars.clone()));
+
+    while let Some((index, current_chars)) = stack.pop() {
+        if index == chars.len() {
+            let result_str: String = current_chars.iter().collect();
+            if !results.contains(&result_str) {
+                results.push(result_str);
+            }
+        } else if current_chars[index] == '?' {
+            for &replace_char in &['.', '#'] {
+                let mut new_chars = current_chars.clone();
+                new_chars[index] = replace_char;
+                stack.push((index + 1, new_chars));
+            }
+        } else {
+            stack.push((index + 1, current_chars));
+        }
+    }
+}
+
 fn count_damages(input: &str) -> Vec<usize> {
     input
         .split('.')
@@ -41,6 +64,10 @@ fn compare_vectors(vec1: &[usize], vec2: &[usize]) -> bool {
 
     vec1.iter().zip(vec2.iter()).all(|(&a, &b)| a == b)
 }
+
+// fn compare_vectors(vec1: &[usize], vec2: &[usize]) -> bool {
+//     vec1.iter().eq(vec2.iter())
+// }
 
 fn parse_line(line: &str) -> (String, Vec<usize>) {
     let parts: Vec<&str> = line.split_whitespace().collect();
@@ -85,7 +112,8 @@ pub fn process_file(file_path: &str) -> usize {
                 let mut chars: Vec<char> = records.chars().collect();
                 let mut results: Vec<String> = Vec::new();
 
-                generate_cases(&mut chars, 0, &mut results);
+                // generate_cases(&mut chars, 0, &mut results);
+                generate_cases_iterative(&mut chars, &mut results);
 
                 let count = results
                     .par_iter()
