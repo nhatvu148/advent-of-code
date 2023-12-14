@@ -1,7 +1,9 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-pub fn process_file(filename: &str) -> Vec<(Vec<Vec<char>>, Option<usize>, Option<usize>)> {
+pub fn process_file(
+    filename: &str,
+) -> Vec<(Vec<Vec<char>>, Option<usize>, Option<usize>)> {
     let file = File::open(filename).expect("Unable to open the file.");
     let reader = BufReader::new(file);
 
@@ -43,7 +45,6 @@ fn process_block(
         current_block.clear();
     }
 }
-
 
 pub fn transpose_matrix(matrix: &Vec<Vec<char>>) -> Vec<Vec<char>> {
     let rows = matrix.len();
@@ -109,15 +110,15 @@ pub fn find_vertical_reflection(block: &Vec<Vec<char>>) -> Option<usize> {
     None // Return None if no reflection line is found
 }
 
-pub fn smudge_block(block: &Vec<Vec<char>>, i: usize, j: usize) -> Vec<Vec<char>> {
+pub fn smudge_block(
+    block: &Vec<Vec<char>>,
+    i: usize,
+    j: usize,
+) -> Vec<Vec<char>> {
     let mut new_block = block.clone();
 
     // Change the element at the specified position
-    new_block[i][j] = if new_block[i][j] == '#' {
-        '.'
-    } else {
-        '#'
-    };
+    new_block[i][j] = if new_block[i][j] == '#' { '.' } else { '#' };
 
     new_block
 }

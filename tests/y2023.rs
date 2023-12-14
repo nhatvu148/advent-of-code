@@ -1,6 +1,7 @@
 use advent_of_code::y2023::{
     day_1::*,
     day_10::process_file as process_file_10,
+    day_14::{process_file as process_file_14, tilt_north},
     day_11::{
         get_sum_length, get_sum_length_n, process_file as process_file_11,
     },
@@ -310,5 +311,20 @@ fn test_day_13() {
         let sum = get_sum(&result);
 
         assert_eq!(sum, *expected_sum);
+    }
+}
+
+#[test]
+fn test_day_14() {
+    let test_cases: [(&str, usize, usize); 2] = [
+        ("input/y2023/day_14_1.txt", 136, 1),
+        ("input/y2023/day_14_2.txt", 113456, 1),
+    ];
+
+    for (file_path, expected_total_load, _) in test_cases.iter() {
+        let mirror = process_file_14(file_path);
+        let total_load = tilt_north(&mirror);
+
+        assert_eq!(total_load, *expected_total_load);
     }
 }
