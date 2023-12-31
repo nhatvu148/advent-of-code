@@ -2,6 +2,7 @@ use std::{env, ffi::OsStr, path::PathBuf, time::Instant};
 
 pub mod y2022;
 pub mod y2023;
+pub mod utils;
 
 pub fn runner(f: impl Fn(&str)) {
     let start_time = Instant::now();
