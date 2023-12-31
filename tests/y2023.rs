@@ -1,12 +1,12 @@
 use advent_of_code::y2023::{
     day_1::*,
     day_10::process_file as process_file_10,
-    day_14::{process_file as process_file_14, tilt_north},
     day_11::{
         get_sum_length, get_sum_length_n, process_file as process_file_11,
     },
     day_12::process_file as process_file_12,
     day_13::{get_sum, process_file as process_file_13},
+    day_14::{measure_load, process_file as process_file_14, tilt_north},
     day_2::{
         calculate_power_max_set, is_game_possible, read_games_from_file,
         CubeCounts,
@@ -323,7 +323,8 @@ fn test_day_14() {
 
     for (file_path, expected_total_load, _) in test_cases.iter() {
         let mirror = process_file_14(file_path);
-        let total_load = tilt_north(&mirror);
+        let tilted_north = tilt_north(&mirror);
+        let total_load = measure_load(&tilted_north);
 
         assert_eq!(total_load, *expected_total_load);
     }
